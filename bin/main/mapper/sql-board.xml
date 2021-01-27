@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+				<!--  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+-->
+<mapper namespace="board.board.mapper.BoardMapper">
+	<select id="selectBoardList" resultType="board.board.dto.BoardDto">
+		<![CDATA[
+			SELECT
+				board_idx,
+				title,
+				hit_cnt,
+				DATE_FORMAT(created_datetime, '%Y.%m.%d %H:%i:%s') AS created_datetime
+			FROM
+				t_board
+			WHERE
+				deleted_yn = 'N'
+			ORDER BY board_idx DESC
+		]]>
+	</select>
+	
+	<insert id="insertBoard" parameterType="board.board.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardIdx">
+		<![CDATA[
+			INSERT INTO t_board
+			(
+				title, 
+				contents, 
+				created_datetime, 
+				creator_id
+			) 
+			VALUES 
+			(
+				#{title}, 
+				#{contents}, 
+				NOW(), 
+				'admin'			
+			)
+		]]>
+	</insert>
+	
+	<update id="updateHitCount" parameterType="int">
+		<![CDATA[
+			UPDATE 
+				t_board 
+			SET 
+				hit_cnt = hit_cnt + 1 
+			WHERE 
+				board_idx = #{boardIdx}
+		]]>
+	</update>
+	
+	<select id="selectBoardDetail" parameterType="int" resultType="board.board.dto.BoardDto">
+		<![CDATA[
+			SELECT
+				board_idx,
+				title,
+				contents,
+				hit_cnt,
+				DATE_FORMAT(created_datetime, '%Y.%m.%d %H:%i:%s') AS created_datetime,
+				creator_id
+			FROM
+				t_board
+			WHERE
+				board_idx = #{boardIdx}
+				AND deleted_yn = 'N'
+		]]>
+	</select>
+	
+</mapper>
+
+<!-- 1 -->
+
+<!-- 매퍼의 namespace를 지정한다. 매퍼와 XML의 쿼리를 매칭해서 사용하려면
+매퍼의 인터페이스의 경로와 메서드의 이름과 쿼리의 이름이 같아야 한다.
+즉, BoardMapper 인터페이스에 있는 selectBoardList에서
+selectBoardList라는 이름의 쿼리와 매핑하기 위해서는 그 전체 경로인
+board.board.mapper.BoardMapper.selectBoardList가 필요하다.
+쿼리의 아이디를 지정할 때 각각의 쿼리에 전체 경로를 일일이 명시하는 것은
+중복작업이다. 네임스페이스에서 공통적으로 사용되는 경로를 지정해서
+네임스페이스와 쿼리 아이디가 합쳐져서 호출되게끔 해야 한다. -->
+
+<!-- 2 -->
+
+<!-- <select> 태그를 이용하여 select 쿼리임을 나타낸다.
+id는 해당쿼리의 id를 지정해 준다. 여기서는 selectBoardList라는
+아이드를 사용하고 있다.
+
+resultType은 이 쿼리의 실행 결과가 앞에서 만든 DTO인 BoardDto 형식으로
+반환되는 것을 의미한다. 여기서는 아직 사용되지 않았지만 ParameterType이라는
+속성도 있다. 이 속성은 입력되는 파라미터의 형식을 지정해 준다. 그런데
+parameterType과 resultType을 명시할 때는 해당 클래서의 패키지를 포함하여
+지정해야 한다. 여기서 BoardDto를 사용하기 위해서 전체경로인
+board.board.dto.BoardDto를 명시했다.
+
+만약 DTO와 같이 개발자가 생성한 클래스가 아닌 자바의 클래스를 사용할 경우
+마이바티스의 타입 별칭 기능을 사용할 수 있다. 예를 들어 parameterType이나
+resultType에 HashMap을 사용할 경우에는 HashMap의 전체 패키지 경로인
+java.util.HashMap으로 지정해야 한다. 하지만 마이바티스의 타입 별칭 기능
+덕분에 단순히 hashmap이라고만 해도 HashMap을 사용할 수 있다.
+타입 별칭(type alias)은 특정 클래스나 자주 사용되는 자바 형식을 간단히
+사용할 수 있도록 지원한다.
+
+	Integer -> int
+	Float -> float
+	Double -> double
+	String -> string
+	Boolean -> boolean
+	Map -> map
+	HashMap -> hashmap
+	List -> list
+	ArrayList -> arraylist 등 -->
+
+
+
+
+
+
+
+
+
+
+

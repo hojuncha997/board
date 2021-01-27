@@ -1,0 +1,4 @@
+board/configuration/DatabaseConfiguration.java
+ board.configuration.DatabaseConfiguration
+board/BoardApplication.java
+ board.BoardApplication
