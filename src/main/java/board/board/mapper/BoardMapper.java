@@ -18,6 +18,10 @@ public interface BoardMapper {
 	
 	BoardDto selectBoardDetail(int boardIdx) throws Exception;
 	
+	void updateBoard(BoardDto board) throws Exception;
+	
+	void deleteBoard(int boardIdx) throws Exception;
+	
 	/* 인터페이스이기 때문에 메서드의 이름과 반환 형식만 지정함.
 	 *  여기서 지정한 메서드의 이름은 SQL의 이름과 동일해야 함.
 	 *  마이바티스는 쿼리를 XML에 작성하고 아이디를 이용하여 매핑함.
